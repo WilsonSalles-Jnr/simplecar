@@ -6,10 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(schema = "people", name = "tb_customer")
+@Table(schema = "people", name = "tb_model")
 @Getter
 @Setter
-public class Customer extends GenericEntityId {
-	private String name;
-	private String phone;
+public class Model extends GenericEntityId {
+	public String name;
 }
