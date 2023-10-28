@@ -1,5 +1,7 @@
 package com.simplecar.models.requests;
 
+import java.util.List;
+
 import com.simplecar.enums.WorkorderStatusEnum;
 
 import lombok.Getter;
@@ -9,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class WorkorderRequest {
 	private WorkorderStatusEnum status;
+	private List<Long> itemIds;
 	private Long vehicleId;
 	private Boolean smashed;
 	private Boolean scratrched;
