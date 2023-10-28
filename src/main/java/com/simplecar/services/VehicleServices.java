@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.simplecar.models.Customer;
 import com.simplecar.models.Vehicle;
 import com.simplecar.repositories.CustomerRepository;
-import com.simplecar.repositories.ModelRepository;
 import com.simplecar.repositories.VehicleRepository;
 
 import jakarta.persistence.EntityNotFoundException;

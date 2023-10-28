@@ -29,26 +29,27 @@ public class ItemServices {
 	}
 
 	public Item createItem(ItemRequest item) {
-		new Item();
-		Item newItem = Item.builder().name(item.getName()).description(item.getDescription()).type(item.getType())
-				.build();
-		List<Model> models = modelRepository.findAllById(item.getModelIds());
-		newItem.setModels(new HashSet<>(models));
+		Item newItem = buildByRequest(item);
 		return itemRepository.save(newItem);
 	}
 
 	public Item editItem(Long id, ItemRequest item) {
-		new Item();
-		Item newItem = Item.builder().name(item.getName()).description(item.getDescription()).type(item.getType())
-				.build();
-		List<Model> models = modelRepository.findAllById(item.getModelIds());
-		newItem.setModels(new HashSet<>(models));
+		Item newItem = buildByRequest(item);
 		newItem.setId(id);
 		return itemRepository.save(newItem);
 	}
 
 	public void deleteItem(Long id) {
 		itemRepository.deleteById(id);
+	}
+	
+	public Item buildByRequest(ItemRequest item) {
+		new Item();
+		Item newItem = Item.builder().name(item.getName()).description(item.getDescription()).type(item.getType())
+				.build();
+		List<Model> models = modelRepository.findAllById(item.getModelIds());
+		newItem.setModels(new HashSet<>(models));
+		return newItem;
 	}
 
 }
