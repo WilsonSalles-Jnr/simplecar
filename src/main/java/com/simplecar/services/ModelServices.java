@@ -31,4 +31,8 @@ public class ModelServices {
 		model.setId(id);
 		return modelRepository.save(model);
 	}
+	
+	public void deleteModel(Long id) {
+		modelRepository.deleteById(id);
+	}
 }

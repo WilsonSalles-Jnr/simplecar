@@ -3,6 +3,10 @@ package com.simplecar.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,22 +27,32 @@ public class ModelController {
 	private final ModelServices modelServices;
 
 	@GetMapping("/models")
-	public List<Model> listModels() {
-		return modelServices.listModels();
+	public ResponseEntity<List<Model>> listModels() {
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+				.body(modelServices.listModels());
 	}
 
 	@GetMapping("/{id}")
-	public Optional<Model> getModel(@PathVariable Long id) {
-		return modelServices.getModel(id);
+	public ResponseEntity<Optional<Model>> getModel(@PathVariable Long id) {
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+				.body(modelServices.getModel(id));
 	}
 
 	@PostMapping("/")
-	public Model createModel(@RequestBody Model model) {
-		return modelServices.createModel(model);
+	public ResponseEntity<Model> createModel(@RequestBody Model model) {
+		return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON)
+				.body(modelServices.createModel(model));
 	}
 
 	@PutMapping("/{id}")
-	public Model editModel(@PathVariable Long id, @RequestBody Model model) {
-		return modelServices.editModel(id, model);
+	public ResponseEntity<Model> editModel(@PathVariable Long id, @RequestBody Model model) {
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+				.body(modelServices.editModel(id, model));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> editModel(@PathVariable Long id) {
+		modelServices.deleteModel(id);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).contentType(MediaType.APPLICATION_JSON).build();
 	}
 }

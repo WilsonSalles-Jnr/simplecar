@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.simplecar.models.Customer;
@@ -25,9 +26,6 @@ public class CustomerServices {
 	}
 
 	public Customer createCustomer(Customer customer) throws Exception {
-		if (Objects.isNull(customer.getName()) || customer.getName().isBlank()) {
-			throw new Exception("name is required");
-		}
 		validatePhone(customer, 0L);
 
 		return customerRepository.save(customer);
@@ -41,13 +39,17 @@ public class CustomerServices {
 		customer.setId(customerId);
 		return customerRepository.save(customer);
 	}
+	
+	public void deleteCustomer(Long customerId) {
+		customerRepository.deleteById(customerId);
+	}
 
 	private void validatePhone(Customer customer, Long customerId) throws Exception {
 		if (Objects.isNull(customer.getPhone()) || customer.getPhone().isBlank()) {
 			throw new Exception("phone is required");
 		}
 		if (customer.getPhone().length() < 11 || customer.getPhone().length() > 15) {
-			throw new Exception("Invalid phone lenght");
+			throw new DataIntegrityViolationException("Invalid phone lenght");
 		}
 		if (!customer.getPhone().matches("\\d+")) {
 			throw new Exception("Only numbers allowed");
