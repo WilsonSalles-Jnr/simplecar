@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simplecar.models.Customer;
 import com.simplecar.models.Vehicle;
 import com.simplecar.services.VehicleServices;
 
@@ -32,9 +33,15 @@ public class VehicleController {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(vehicleServices.listVehicles());
 	}
+	
+	@GetMapping("/vehicles/filter")
+	public ResponseEntity<List<Vehicle>> findVehicles(@RequestBody Customer id) {
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
+				.body(vehicleServices.findVehicles(id.getId()));
+	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Optional<Vehicle>> listVehicles(@PathVariable Long id) {
+	public ResponseEntity<Optional<Vehicle>> getVehicle(@PathVariable Long id) {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(vehicleServices.getVehicle(id));
 	}

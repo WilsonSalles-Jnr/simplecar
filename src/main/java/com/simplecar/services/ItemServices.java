@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.simplecar.models.GenericEntityId;
 import com.simplecar.models.Item;
 import com.simplecar.models.Model;
 import com.simplecar.models.requests.ItemRequest;
@@ -26,6 +27,11 @@ public class ItemServices {
 
 	public Optional<Item> getItem(Long id) {
 		return itemRepository.findById(id);
+	}
+	
+	public List<Item> findByModelId(Long modelId) {
+		List<GenericEntityId> ids = itemRepository.listItemByModelId(modelId);
+		return itemRepository.findAllById(ids.stream().map(i -> i.getId()).toList());
 	}
 
 	public Item createItem(ItemRequest item) {

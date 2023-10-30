@@ -25,6 +25,12 @@ public class VehicleServices {
 	public List<Vehicle> listVehicles() {
 		return vehicleRepository.findAll();
 	}
+	
+	public List<Vehicle> findVehicles(Long id) {
+		Customer customer = new Customer();
+		customer.setId(id);
+		return vehicleRepository.findByCustomer(customer);
+	}
 
 	public Optional<Vehicle> getVehicle(Long id) {
 		return vehicleRepository.findById(id);
