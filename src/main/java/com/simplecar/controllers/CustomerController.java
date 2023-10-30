@@ -1,5 +1,6 @@
 package com.simplecar.controllers;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,14 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplecar.models.Customer;
 import com.simplecar.services.CustomerServices;
+import com.simplecar.services.ReportServices;
 
 import lombok.RequiredArgsConstructor;
+import net.sf.jasperreports.engine.JRException;
 
 @RestController
 @RequestMapping("/customer")
 @RequiredArgsConstructor
 public class CustomerController {
 	private final CustomerServices customerServices;
+	private final ReportServices reportServices;
 
 	@GetMapping("/customers")
 	public ResponseEntity<List<Customer>> customers() {
@@ -38,6 +42,11 @@ public class CustomerController {
 		return  ResponseEntity.status(HttpStatus.OK)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(customerServices.getCustomer(id));
+	}
+	
+	@GetMapping("report")
+	public ResponseEntity<byte[]> customerReport() throws FileNotFoundException, JRException {
+		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_PDF).body(reportServices.customerReport("pdf"));
 	}
 
 	@PostMapping("/")
