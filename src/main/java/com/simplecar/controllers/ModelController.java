@@ -51,8 +51,8 @@ public class ModelController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> editModel(@PathVariable Long id) {
+	public ResponseEntity<Void> editModel(@PathVariable Long id) {
 		modelServices.deleteModel(id);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).contentType(MediaType.APPLICATION_JSON).build();
+		return ResponseEntity.noContent().build();
 	}
 }

@@ -44,7 +44,7 @@ public class CustomerController {
 				.body(customerServices.getCustomer(id));
 	}
 	
-	@GetMapping("report")
+	@GetMapping("/report")
 	public ResponseEntity<byte[]> customerReport() throws FileNotFoundException, JRException {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_PDF).body(reportServices.customerReport("pdf"));
 	}
@@ -65,9 +65,8 @@ public class CustomerController {
 	
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Optional<Customer>> deleteCustomer(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
 		customerServices.deleteCustomer(id);
-		return  ResponseEntity.status(HttpStatus.NO_CONTENT)
-				.contentType(MediaType.APPLICATION_JSON).build();
+		return  ResponseEntity.noContent().build();
 	}
 }

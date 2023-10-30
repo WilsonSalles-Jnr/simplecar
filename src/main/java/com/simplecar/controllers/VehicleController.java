@@ -59,8 +59,8 @@ public class VehicleController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> deleteVehicle(@PathVariable Long id) {
+	public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
 		vehicleServices.deleteCustomer(id);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).contentType(MediaType.APPLICATION_JSON).build();
+		return ResponseEntity.noContent().build();
 	}
 }
