@@ -2,7 +2,6 @@ package com.simplecar.controllers;
 
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplecar.models.Customer;
+import com.simplecar.models.dto.CustomerDTO;
 import com.simplecar.services.CustomerServices;
 import com.simplecar.services.ReportServices;
 
@@ -31,14 +31,14 @@ public class CustomerController {
 	private final ReportServices reportServices;
 
 	@GetMapping("/customers")
-	public ResponseEntity<List<Customer>> customers() {
+	public ResponseEntity<List<CustomerDTO>> customers() {
 		return ResponseEntity.status(HttpStatus.OK)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(customerServices.listCustomers());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Optional<Customer>> customer(@PathVariable Long id) {
+	public ResponseEntity<CustomerDTO> customer(@PathVariable Long id) {
 		return  ResponseEntity.status(HttpStatus.OK)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(customerServices.getCustomer(id));
@@ -50,14 +50,14 @@ public class CustomerController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<Customer> createCustomer(@RequestBody Customer params) throws Exception {
+	public ResponseEntity<CustomerDTO> createCustomer(@RequestBody Customer params) throws Exception {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(customerServices.createCustomer(params));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Customer> editCustomer(@PathVariable Long id, @RequestBody Customer customer) throws Exception {
+	public ResponseEntity<CustomerDTO> editCustomer(@PathVariable Long id, @RequestBody Customer customer) throws Exception {
 		return ResponseEntity.status(HttpStatus.OK)
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(customerServices.editCustomer(id, customer));

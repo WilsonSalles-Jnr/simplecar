@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import com.simplecar.models.Customer;
 import com.simplecar.models.Model;
 import com.simplecar.models.Vehicle;
+import com.simplecar.models.dto.VehicleDTO;
 import com.simplecar.repositories.CustomerRepository;
 import com.simplecar.repositories.ModelRepository;
 import com.simplecar.repositories.VehicleRepository;
+import com.simplecar.utils.ModelMapperConverter;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,30 +23,43 @@ public class VehicleServices {
 	private final VehicleRepository vehicleRepository;
 	private final CustomerRepository customerRepository;
 	private final ModelRepository modelRepository;
+	private final ModelMapperConverter modelMapperConverter;
 	
-	public List<Vehicle> listVehicles() {
-		return vehicleRepository.findAll();
+	public List<VehicleDTO> listVehicles() {
+		List<Vehicle> vehicle = vehicleRepository.findAll();
+		return modelMapperConverter.toDTOList(vehicle, VehicleDTO.class);
 	}
 	
-	public List<Vehicle> findVehicles(Long id) {
+	public List<VehicleDTO> findVehicles(Long id) {
 		Customer customer = new Customer();
 		customer.setId(id);
-		return vehicleRepository.findByCustomer(customer);
+		List<Vehicle> vehicle = vehicleRepository.findByCustomer(customer);
+		return modelMapperConverter.toDTOList(vehicle, VehicleDTO.class);
 	}
 
-	public Optional<Vehicle> getVehicle(Long id) {
-		return vehicleRepository.findById(id);
+	public VehicleDTO getVehicle(Long id) {
+		Optional<Vehicle> vehicle = vehicleRepository.findById(id);
+		if(vehicle.isPresent()) {
+			return modelMapperConverter.toDTO(vehicle.get(), VehicleDTO.class);
+		}
+		throw new EntityNotFoundException("Vehicle not found");
 	}
 
-	public Vehicle createVehicle(Vehicle vehicle) throws EntityNotFoundException {
+	public VehicleDTO createVehicle(Vehicle vehicle) throws EntityNotFoundException {
 		validateCustomerAndModel(vehicle);
-		return vehicleRepository.save(vehicle);
+		Vehicle newVehicle = vehicleRepository.save(vehicle);
+		return modelMapperConverter.toDTO(newVehicle, VehicleDTO.class);
 	}
 
-	public Vehicle editVehicle(Long id, Vehicle vehicle) {
+	public VehicleDTO editVehicle(Long id, Vehicle vehicle) {
 		vehicle.setId(id);
-		validateCustomerAndModel(vehicle);
-		return vehicleRepository.save(vehicle);
+		if(vehicleRepository.existsById(id)) {
+			validateCustomerAndModel(vehicle);
+			Vehicle updateVehicle = vehicleRepository.save(vehicle);
+			return modelMapperConverter.toDTO(updateVehicle, VehicleDTO.class);			
+		} else {
+			throw new EntityNotFoundException("Vehicle Not Found");
+		}
 	}
 	
 	public void deleteCustomer(Long id) {

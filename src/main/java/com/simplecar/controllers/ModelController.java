@@ -1,7 +1,6 @@
 package com.simplecar.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplecar.models.Model;
+import com.simplecar.models.dto.ModelDTO;
 import com.simplecar.services.ModelServices;
 
 import lombok.RequiredArgsConstructor;
@@ -27,25 +27,25 @@ public class ModelController {
 	private final ModelServices modelServices;
 
 	@GetMapping("/models")
-	public ResponseEntity<List<Model>> listModels() {
+	public ResponseEntity<List<ModelDTO>> listModels() {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(modelServices.listModels());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Optional<Model>> getModel(@PathVariable Long id) {
+	public ResponseEntity<ModelDTO> getModel(@PathVariable Long id) {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(modelServices.getModel(id));
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<Model> createModel(@RequestBody Model model) {
+	public ResponseEntity<ModelDTO> createModel(@RequestBody Model model) {
 		return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON)
 				.body(modelServices.createModel(model));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Model> editModel(@PathVariable Long id, @RequestBody Model model) {
+	public ResponseEntity<ModelDTO> editModel(@PathVariable Long id, @RequestBody Model model) {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(modelServices.editModel(id, model));
 	}

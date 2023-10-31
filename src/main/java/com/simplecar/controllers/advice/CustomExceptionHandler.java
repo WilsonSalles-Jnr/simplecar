@@ -1,7 +1,5 @@
 package com.simplecar.controllers.advice;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.hibernate.PropertyValueException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -11,22 +9,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.simplecar.models.dto.CustomExceptionDTO;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @ControllerAdvice
 public class CustomExceptionHandler {
 	@ExceptionHandler(PropertyValueException.class)
 	public ResponseEntity<CustomExceptionDTO> handlePropertyValueException(PropertyValueException ex) {
-		CustomExceptionDTO exception = new CustomExceptionDTO();
-		exception.setStatus(HttpStatus.BAD_REQUEST);
-		exception.setMessage("Error in " + ex.getPropertyName() + ": " + ex.getMessage() );
-	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception);
+	    return setterExceptions(HttpStatus.BAD_REQUEST, "Error in " + ex.getPropertyName() + ": " + ex.getMessage());
 	}
 	
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<CustomExceptionDTO> handleInvocationTarget(DataIntegrityViolationException ex) {
+	    return setterExceptions(HttpStatus.BAD_REQUEST, ex.getMostSpecificCause().getMessage());
+	}
+	
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<CustomExceptionDTO> handleInvocationTarget(EntityNotFoundException ex) {
+	    return setterExceptions(HttpStatus.NOT_FOUND, ex.getMessage());
+	}
+	
+	private ResponseEntity<CustomExceptionDTO> setterExceptions(HttpStatus status, String message) {
 		CustomExceptionDTO exception = new CustomExceptionDTO();
-		exception.setStatus(HttpStatus.BAD_REQUEST);
-		exception.setMessage(ex.getMostSpecificCause().getMessage());
-	    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception);
+		exception.setStatus(status);
+		exception.setMessage(message);
+	    return ResponseEntity.status(status).body(exception);
 	}
 
 }

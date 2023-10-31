@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simplecar.models.Customer;
 import com.simplecar.models.Vehicle;
+import com.simplecar.models.dto.VehicleDTO;
 import com.simplecar.services.VehicleServices;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -29,31 +30,31 @@ public class VehicleController {
 	private final VehicleServices vehicleServices;
 
 	@GetMapping("/vehicles")
-	public ResponseEntity<List<Vehicle>> listVehicles() {
+	public ResponseEntity<List<VehicleDTO>> listVehicles() {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(vehicleServices.listVehicles());
 	}
 	
 	@GetMapping("/vehicles/filter")
-	public ResponseEntity<List<Vehicle>> findVehicles(@RequestBody Customer id) {
+	public ResponseEntity<List<VehicleDTO>> findVehicles(@RequestBody Customer id) {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(vehicleServices.findVehicles(id.getId()));
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Optional<Vehicle>> getVehicle(@PathVariable Long id) {
+	public ResponseEntity<VehicleDTO> getVehicle(@PathVariable Long id) {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(vehicleServices.getVehicle(id));
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) throws EntityNotFoundException {
+	public ResponseEntity<VehicleDTO> createVehicle(@RequestBody Vehicle vehicle) throws EntityNotFoundException {
 		return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON)
 				.body(vehicleServices.createVehicle(vehicle));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Vehicle> listVehicles(@PathVariable Long id, @RequestBody Vehicle vehicle) {
+	public ResponseEntity<VehicleDTO> listVehicles(@PathVariable Long id, @RequestBody Vehicle vehicle) {
 		return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON)
 				.body(vehicleServices.editVehicle(id, vehicle));
 	}

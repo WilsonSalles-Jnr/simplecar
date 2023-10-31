@@ -8,36 +8,51 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.simplecar.models.Customer;
+import com.simplecar.models.dto.CustomerDTO;
 import com.simplecar.repositories.CustomerRepository;
+import com.simplecar.utils.ModelMapperConverter;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerServices {
 	private final CustomerRepository customerRepository;
+	private final ModelMapperConverter entityConverter;
 
-	public List<Customer> listCustomers() {
-		return customerRepository.findAll();
+	public List<CustomerDTO> listCustomers() {
+		List<Customer> customers = customerRepository.findAll();
+		return entityConverter.toDTOList(customers, CustomerDTO.class);
 	}
 
-	public Optional<Customer> getCustomer(Long customerId) {
-		return customerRepository.findById(customerId);
+	public CustomerDTO getCustomer(Long customerId) {
+		Optional<Customer> customer = customerRepository.findById(customerId);
+		if(customer.isPresent()) {
+			return entityConverter.toDTO(customer.get(), CustomerDTO.class);
+		} else {
+			throw new EntityNotFoundException("Customer not found");
+		}
+		
 	}
 
-	public Customer createCustomer(Customer customer) throws Exception {
+	public CustomerDTO createCustomer(Customer customer) throws Exception {
 		validatePhone(customer, 0L);
-
-		return customerRepository.save(customer);
+		Customer created = customerRepository.save(customer);
+		return entityConverter.toDTO(created, CustomerDTO.class);
 	}
 
-	public Customer editCustomer(Long customerId, Customer customer) throws Exception {
+	public CustomerDTO editCustomer(Long customerId, Customer customer) throws Exception {
+		if(!customerRepository.existsById(customerId)) {
+			throw new EntityNotFoundException("Customer not found");
+		}
 		if (Objects.isNull(customer.getName()) || customer.getName().isBlank()) {
 			throw new Exception("name is required");
 		}
 		validatePhone(customer, customerId);
 		customer.setId(customerId);
-		return customerRepository.save(customer);
+		Customer edited = customerRepository.save(customer);
+		return entityConverter.toDTO(edited, CustomerDTO.class);
 	}
 	
 	public void deleteCustomer(Long customerId) {
