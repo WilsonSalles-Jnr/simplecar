@@ -1,10 +1,9 @@
 package com.simplecar.utils;
 
-import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 
 public class ModelMapperConverter {
 	private final ModelMapper modelMapper = new ModelMapper();
@@ -14,7 +13,8 @@ public class ModelMapperConverter {
     }
 
     public <E, D> List<D> toDTOList(List<E> entities, Class<D> dtoClass) {
-        Type listType = new TypeToken<List<D>>() {}.getType();
-        return modelMapper.map(entities, listType);
+    	List<D> dtoList = new ArrayList<>();
+    	entities.forEach(e -> dtoList.add(modelMapper.map(e, dtoClass)));
+        return dtoList;
     }
 }
