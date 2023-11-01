@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/simplecar
+    username: postgres
+    password: 123456789
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update
+
+springdoc:
+  api-docs:
+    path: /api
+  swagger-ui:
+    path: /swagger
+    filter: true
+  writer-with-default-pretty-printer: true
+  use-fqn: true
+  default-flat-param-object: true
+  default-support-form-data: true
