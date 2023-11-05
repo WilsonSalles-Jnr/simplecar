@@ -15,17 +15,17 @@ import com.simplecar.security.enums.RoleEnum;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	@Autowired
-	SecurityFilter securityFilter;
+  @Autowired
+  SecurityFilter securityFilter;
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		return httpSecurity.csrf(csrf -> csrf.disable())
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers(HttpMethod.GET, "/workorder/workorders").hasAuthority(RoleEnum.SELLER.name())
-						)
-				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-				.build();
-	}
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    return httpSecurity.csrf(csrf -> csrf.disable())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            authorize -> authorize.requestMatchers(HttpMethod.GET, "/workorder/workorders")
+                .hasAuthority(RoleEnum.SELLER.name()))
+        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
+  }
 }
