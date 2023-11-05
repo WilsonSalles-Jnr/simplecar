@@ -4,12 +4,14 @@ spring:
     username: postgres
     password: 123456789
     driver-class-name: org.postgresql.Driver
-
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         ddl-auto: update
+
+server:
+  port: 8081
 
 springdoc:
   api-docs:
@@ -21,3 +23,8 @@ springdoc:
   use-fqn: true
   default-flat-param-object: true
   default-support-form-data: true
+  
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:local-key}
